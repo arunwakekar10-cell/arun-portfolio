@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
@@ -8,15 +8,80 @@ import { Education } from './components/Education';
 import { Responsibilities } from './components/Responsibilities';
 import { Projects } from './components/Projects';
 import { Contact } from './components/Contact';
-
+// Section IDs in order
+const sectionIds = ['home', 'experience', 'skills', 'education', 'responsibilities', 'projects', 'contact'];
 export function App() {
   const [activeSection, setActiveSection] = useState('home');
   const [loading, setLoading] = useState(true);
-
+  
+  // Use ref to avoid stale closure issues
+  const isManualScrollRef = useRef(false);
+  const manualScrollTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   useEffect(() => {
     setTimeout(() => setLoading(false), 2000);
   }, []);
-
+  // Handle manual navigation click - temporarily disable scroll detection
+  const handleNavClick = (section: string) => {
+    isManualScrollRef.current = true;
+    setActiveSection(section);
+    
+    // Clear existing timeout
+    if (manualScrollTimeout.current) {
+      clearTimeout(manualScrollTimeout.current);
+    }
+    
+    // Re-enable scroll detection after animation completes
+    manualScrollTimeout.current = setTimeout(() => {
+      isManualScrollRef.current = false;
+    }, 1200);
+  };
+  // Scroll-based section detection (more reliable than Intersection Observer)
+  useEffect(() => {
+    if (loading) return;
+    const handleScroll = () => {
+      // Skip if manual scroll is in progress
+      if (isManualScrollRef.current) return;
+      const scrollPosition = window.scrollY + window.innerHeight / 3;
+      const scrollHeight = document.documentElement.scrollHeight;
+      const clientHeight = document.documentElement.clientHeight;
+      // At very top of page - set to home
+      if (window.scrollY < 100) {
+        setActiveSection('home');
+        return;
+      }
+      // At very bottom of page - set to contact
+      if (window.scrollY + clientHeight >= scrollHeight - 50) {
+        setActiveSection('contact');
+        return;
+      }
+      // Find which section is currently in view
+      let currentSection = 'home';
+      
+      for (const sectionId of sectionIds) {
+        const element = document.getElementById(sectionId);
+        if (element) {
+          const rect = element.getBoundingClientRect();
+          const elementTop = rect.top + window.scrollY;
+          
+          if (scrollPosition >= elementTop) {
+            currentSection = sectionId;
+          }
+        }
+      }
+      setActiveSection(currentSection);
+    };
+    // Run once on mount
+    handleScroll();
+    // Add scroll listener
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (manualScrollTimeout.current) {
+        clearTimeout(manualScrollTimeout.current);
+      }
+    };
+  }, [loading]);
   return (
     <AnimatePresence mode="wait">
       {loading ? (
@@ -75,8 +140,7 @@ export function App() {
               }}
             />
           </div>
-
-          <Navbar activeSection={activeSection} setActiveSection={setActiveSection} />
+          <Navbar activeSection={activeSection} setActiveSection={handleNavClick} />
           <main className="relative z-10">
             <Hero />
             <Experience />
