@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, User, Briefcase, Code2, GraduationCap, ClipboardList, FolderKanban, Mail } from 'lucide-react';
 
@@ -29,14 +29,53 @@ export function Navbar({ activeSection, setActiveSection }: NavbarProps) {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const handleClick = (id: string) => {
-    setActiveSection(id);
+  // Prevent body scroll when mobile menu is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
+
+  const scrollToSection = useCallback((id: string) => {
     const element = document.getElementById(id);
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+      const navbarHeight = 80;
+      const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
+      const offsetPosition = elementPosition - navbarHeight;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
     }
+  }, []);
+
+  const handleNavClick = useCallback((id: string) => {
+    setActiveSection(id);
     setIsOpen(false);
-  };
+    
+    // Delay scroll to allow menu close animation
+    setTimeout(() => {
+      scrollToSection(id);
+    }, 150);
+  }, [setActiveSection, scrollToSection]);
+
+  const handleMobileItemClick = useCallback((e: React.MouseEvent | React.TouchEvent, id: string) => {
+    e.preventDefault();
+    e.stopPropagation();
+    handleNavClick(id);
+  }, [handleNavClick]);
+
+  const handleMobileMenuToggle = useCallback((e: React.MouseEvent | React.TouchEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsOpen(prev => !prev);
+  }, []);
 
   return (
     <motion.nav
@@ -72,7 +111,7 @@ export function Navbar({ activeSection, setActiveSection }: NavbarProps) {
               {navItems.map((item) => (
                 <motion.button
                   key={item.id}
-                  onClick={() => handleClick(item.id)}
+                  onClick={() => handleNavClick(item.id)}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   className={`relative px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 flex items-center space-x-2 ${
@@ -98,47 +137,66 @@ export function Navbar({ activeSection, setActiveSection }: NavbarProps) {
           </div>
 
           {/* Mobile Menu Button */}
-          <motion.button
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-            onClick={() => setIsOpen(!isOpen)}
-            className="lg:hidden p-3 rounded-xl glass-light text-white"
+          <button
+            onClick={handleMobileMenuToggle}
+            onTouchEnd={handleMobileMenuToggle}
+            className="lg:hidden p-3 rounded-xl glass-light text-white touch-manipulation select-none active:scale-95 transition-transform"
+            aria-label="Toggle menu"
+            type="button"
           >
-            {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </motion.button>
+            {isOpen ? <X className="w-6 h-6 pointer-events-none" /> : <Menu className="w-6 h-6 pointer-events-none" />}
+          </button>
         </div>
       </div>
 
       {/* Mobile Nav */}
       <AnimatePresence>
         {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3 }}
-            className="lg:hidden bg-slate-950/98 backdrop-blur-2xl border border-white/10 mt-2 mx-4 rounded-2xl overflow-hidden shadow-2xl"
-          >
-            <div className="p-4 space-y-2">
-              {navItems.map((item, index) => (
-                <motion.button
-                  key={item.id}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.05 }}
-                  onClick={() => handleClick(item.id)}
-                  className={`w-full px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 flex items-center space-x-3 ${
-                    activeSection === item.id
-                      ? 'bg-gradient-to-r from-emerald-500 to-cyan-500 text-white'
-                      : 'text-slate-300 hover:bg-white/5'
-                  }`}
-                >
-                  <item.icon className="w-5 h-5" />
-                  <span>{item.label}</span>
-                </motion.button>
-              ))}
-            </div>
-          </motion.div>
+          <>
+            {/* Backdrop overlay */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="lg:hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[-1]"
+              onClick={() => setIsOpen(false)}
+              onTouchEnd={() => setIsOpen(false)}
+            />
+            
+            <motion.div
+              initial={{ opacity: 0, y: -20, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -20, scale: 0.95 }}
+              transition={{ duration: 0.25, ease: 'easeOut' }}
+              className="lg:hidden bg-slate-950/98 backdrop-blur-2xl border border-white/10 mt-2 mx-4 rounded-2xl overflow-hidden shadow-2xl"
+            >
+              <div className="p-4 space-y-2">
+                {navItems.map((item, index) => {
+                  const IconComponent = item.icon;
+                  return (
+                    <motion.button
+                      key={item.id}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.05 }}
+                      onClick={(e) => handleMobileItemClick(e, item.id)}
+                      onTouchEnd={(e) => handleMobileItemClick(e, item.id)}
+                      className={`w-full px-4 py-4 rounded-xl text-base font-medium transition-all duration-200 flex items-center space-x-3 touch-manipulation select-none active:scale-[0.98] ${
+                        activeSection === item.id
+                          ? 'bg-gradient-to-r from-emerald-500 to-cyan-500 text-white'
+                          : 'text-slate-300 hover:bg-white/10 active:bg-white/15'
+                      }`}
+                      type="button"
+                    >
+                      <IconComponent className="w-5 h-5 pointer-events-none" />
+                      <span className="pointer-events-none">{item.label}</span>
+                    </motion.button>
+                  );
+                })}
+              </div>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
     </motion.nav>
