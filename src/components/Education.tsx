@@ -11,8 +11,8 @@ const education = {
 const certifications = [
   {
     title: 'Certified Tester Foundation Level (CTFL) v4.0',
-    institute: 'BCS, The Chartered Institute for IT',
-    description: 'England and Wales (No. 292786) and Scotland (No. SC051487)',
+    institute: 'ISTQB®',
+    description: 'ISTQB - is the leading global certification scheme in the field of software testing. Enhance your skills and career opportunities today.',
     gradient: 'from-emerald-500 to-cyan-500',
   },
   {
