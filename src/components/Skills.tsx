@@ -16,6 +16,7 @@ export function Skills() {
     { name: 'MySQL', color: 'from-orange-400 to-orange-600' },
     { name: 'Java', color: 'from-red-400 to-red-600' },
     { name: 'TypeScript', color: 'from-blue-500 to-blue-700' },
+    { name: 'Python (Basic)', color: 'from-orange-600 to-red-600' },
     { name: 'JavaScript', color: 'from-yellow-400 to-yellow-600' },
     { name: 'Cucumber', color: 'from-green-500 to-lime-600' },
     { name: 'Jira', color: 'from-blue-500 to-blue-700' },
@@ -66,6 +67,7 @@ export function Skills() {
         'BDD (Cucumber)',
         'TypeScript',
         'JavaScript',
+        'Python (Basic)',
         'Data-Driven Framework',
         'Modular Framework',
         'Hybrid Framework'
