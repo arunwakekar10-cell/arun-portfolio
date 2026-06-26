@@ -27,7 +27,7 @@ const contactInfo = [
     icon: Github,
     label: 'GitHub',
     value: 'Ajay1Arun',
-    href: 'https://github.com/Ajay1Arun',
+    href: 'https://github.com/arunwakekar10-cell',
     gradient: 'from-purple-500 to-pink-500',
   },
 ];
