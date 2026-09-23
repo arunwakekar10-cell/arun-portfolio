@@ -1,0 +1,47 @@
+# Arun Wakekar — QA & Test Automation Engineer
+
+> ISTQB CTFL v4.0-certified Quality Analyst with 4+ years of experience designing scalable test-automation frameworks for web, mobile and API layers. Works with Selenium WebDriver, Playwright, Appium, TestSigma, TestNG, Postman, JavaScript and TypeScript inside Agile CI/CD pipelines (Jenkins, Git). Currently Quality Analyst at Pagesuite India Pvt Ltd; previously Automation and Manual Tester at Sankey Business Solutions Pvt Ltd. Available for opportunities.
+
+## Contact
+
+- Email: arun.wakekar10@gmail.com
+- Phone: +91 86986 15947
+- LinkedIn: https://www.linkedin.com/in/arun-wakekar
+- GitHub: https://github.com/Ajay1Arun
+- Location: Chhatrapati Sambhajinagar, Maharashtra, India
+- Availability: Available for opportunities (remote / hybrid / on-site India)
+
+## Experience
+
+- Quality Analyst — Pagesuite India Pvt Ltd (Sep 2024 – Present): functional and regression testing of e-paper, magazine and article modules; automation with TestSigma, Selenium and Appium; smoke testing for daily releases; Google Analytics and Charles Proxy debugging; iOS TestFlight validation; BrowserStack cross-browser testing.
+- Automation and Manual Tester — Sankey Business Solutions Pvt Ltd (Nov 2022 – Sep 2024): designed automation frameworks for the printing and logistics domain; led testing of print-management software; validated supply-chain workflows on web and mobile.
+
+## Core skills
+
+- Testing types: functional, regression, smoke, sanity, exploratory, accessibility, API, database, cross-browser, mobile (Android/iOS)
+- Automation: Selenium WebDriver, Appium, Playwright, TestSigma, TestNG, JUnit, Maven, Selenium Grid, data-driven / modular / hybrid frameworks, BDD (Cucumber)
+- Programming: Java, JavaScript, TypeScript, Python (basic), SQL
+- Platforms & tools: Jira, Postman, JMeter, Charles Proxy, BrowserStack, TestFlight, Google Analytics, Confluence
+- CI/CD & data: Jenkins, Git, PostgreSQL, MySQL, database testing
+
+## Certifications
+
+- ISTQB Certified Tester Foundation Level (CTFL) v4.0 — ISTQB
+- Selenium Certification — Naresh IT, Hyderabad
+- Core Java Certification — Naresh IT, Hyderabad
+- Generative AI Mastermind — Outskill
+
+## Notable projects
+
+- Global digital newspaper platform (Australia, Germany, UK, USA): e-papers, magazines, articles — automation via Selenium, Appium, TestSigma; accessibility and cross-device coverage.
+- Printing & Fleet Management System: order processing, print-job management, inventory, shipping and quality-control modules — Selenium + Cucumber BDD + Jenkins.
+- SaveMake (live): https://savemake.app/ — bookmark workspace with boards, columns, cards and browser import; built end-to-end with AI pair-programming.
+- AI Business Tool (live): https://aibusinesstool.com/ — submits SaaS products to 300+ directories; landing page to checkout built with AI pair-programming.
+
+## About this site
+
+Interactive portfolio built with Next.js, TypeScript, Tailwind CSS and D3.js: skills radar, force-directed QA toolkit network, career timeline and testing-domain donut. Single-page resume: https://www.arunwakekar.in/Arun_Wakekar_Resume.pdf
+
+## Suggested citation
+
+Arun Wakekar, QA & Test Automation Engineer (ISTQB CTFL v4.0), 4+ years of experience — https://www.arunwakekar.in/
